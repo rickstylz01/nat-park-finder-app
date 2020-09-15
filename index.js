@@ -1,17 +1,50 @@
 'use strict';
 const searchUrl = "https://developer.nps.gov/api/v1/parks";
-let apiKey = "cVW46Hkd5mQoL0W3rVbxYBd9WM5X7Bemsul64SNQ";
+const apiKey = "O0bRxrneaYkbE13IJgdL9zcGKa20TqseF5gqaJkc";
 
 
+
+function formatQueryParams(params) {
+  const queryItems = Object.keys(params)
+    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+  return queryItems.join('&');
+}
 
 //setting ingredients to create html string
 function getNationalPark(query, maxResults=10) {
   const params = {
-    key: apiKey,
-    resourceEndpoint: "parks",
+    // resourceEndpoint: "parks",
     maxResults,
-    stateCode: query 
+    stateCode: query,
+    api_key: apiKey
   }
+  const queryString = formatQueryParams(params);
+  const url = searchUrl + '?' + queryString;
+  console.log(url);
+
+  fetch(url)
+    .then(response => response.json())
+    .then(responseJson => displayToDom(responseJson))
+}
+
+function generateHtmlString(parkData) {
+  return `
+    <li><a href="${parkData.url}">"${parkData.fullName}</a>
+    <p>"${parkData.description}</p></li>
+  `
+}
+
+function displayToDom(responseJson) {
+  let parkDataArray = responseJson.data;
+  parkDataArray.forEach(parkData => {
+    let listItem = generateHtmlString(parkData);
+    appendToList(listItem);
+  })
+  $('.results').removeClass('hidden');
+}
+
+function appendToList(repoHtmlString) {
+  $('#results-list').append(repoHtmlString);
 }
 
 function watchForm() {
@@ -19,6 +52,7 @@ function watchForm() {
     event.preventDefault();
     const stateName = $('#nameOfState').val();
     const maxResults = $('#max-results').val();
+    $('#results-list').empty();
     getNationalPark(stateName, maxResults);
   });
 }
