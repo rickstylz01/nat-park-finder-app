@@ -13,14 +13,14 @@ function formatQueryParams(params) {
 //setting ingredients to create html string
 function getNationalPark(query, maxResults=10) {
   const params = {
-    // resourceEndpoint: "parks",
     maxResults,
     stateCode: query,
-    api_key: apiKey
+    api_key: apiKey,
+    limit: maxResults
   }
+  
   const queryString = formatQueryParams(params);
   const url = searchUrl + '?' + queryString;
-  console.log(url);
 
   fetch(url)
     .then(response => response.json())
