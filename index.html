@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>National Park Finder Project</title>
+  <link rel="stylesheet" href="index.css">
+
+</head>
+
+<body>
+  <div class="container">
+    <h1>National Park Finder</h1>
+
+    <form>
+      <fieldset>
+        <legend>Find a national park:</legend>
+        <label for="nameOfState">Select a state:</label>
+        <input type="text" id="nameOfState" required name="nameOfState" ><br>
+        <label for="max-results">Number of results:</label>
+        <input type="number" name="max-results" id="max-results" value="10" min="1" max="10"><br><br>
+        <input type="submit" value="Submit">
+      </fieldset>
+    </form>
+
+    <section class="results hidden">
+      <h2>Results:</h2>
+      <ul id="img-results-ol" alt="placeholder"></ul>
+    </section>
+
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="index.js"></script>
+</body>
+
+</html>
