@@ -34,6 +34,10 @@ function generateHtmlString(parkData) {
   `
 }
 
+function appendToList(repoHtmlString) {
+  $('#results-list').append(repoHtmlString);
+}
+
 function displayToDom(responseJson) {
   let parkDataArray = responseJson.data;
   parkDataArray.forEach(parkData => {
@@ -41,10 +45,6 @@ function displayToDom(responseJson) {
     appendToList(listItem);
   })
   $('.results').removeClass('hidden');
-}
-
-function appendToList(repoHtmlString) {
-  $('#results-list').append(repoHtmlString);
 }
 
 function watchForm() {
