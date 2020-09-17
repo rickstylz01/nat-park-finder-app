@@ -10,19 +10,30 @@ function formatQueryParams(params) {
   return queryItems.join('&');
 }
 
-//setting ingredients to create html string
-function getNationalPark(query, maxResults=10) {
-  const params = {
-    maxResults,
-    stateCode: query,
+function generateRequestUrl(stateNames, maxResults) {
+  let params = {
     api_key: apiKey,
     limit: maxResults
   }
-  
-  const queryString = formatQueryParams(params);
-  const url = searchUrl + '?' + queryString;
 
-  fetch(url)
+  let queryString = formatQueryParams(params);
+  let url = searchUrl + '?' + queryString + "&stateCode=";
+  let statesNamesWithComma = "";
+  stateNames.forEach(state => {
+    let indexOfLastElementInArray = stateNames.length - 1;
+    let isLastState = stateNames.indexOf(state) == indexOfLastElementInArray; 
+    if (isLastState) {
+      statesNamesWithComma += state;
+    } else {
+      statesNamesWithComma += state + ",";
+    }
+  })
+  return url + statesNamesWithComma;
+}
+
+function getNationalPark(stateNames, maxResults=10) {
+  let requestUrl = generateRequestUrl(stateNames, maxResults);
+  fetch(requestUrl)
     .then(response => response.json())
     .then(responseJson => displayToDom(responseJson))
 }
@@ -39,6 +50,7 @@ function appendToList(repoHtmlString) {
 }
 
 function displayToDom(responseJson) {
+  
   let parkDataArray = responseJson.data;
   parkDataArray.forEach(parkData => {
     let listItem = generateHtmlString(parkData);
@@ -48,7 +60,7 @@ function displayToDom(responseJson) {
 }
 
 function watchForm() {
-  $('form').submit(event => {
+  $('#submit-button').click(event => {
     event.preventDefault();
     const stateName = $('#nameOfState').val();
     const maxResults = $('#max-results').val();
